@@ -1,0 +1,27 @@
+{
+  "name": "terracejs_core",
+  "version": "0.0.1",
+  "description": "The Core Terracejs package",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+ssh://git@github.com/Terracejs/Core.git"
+  },
+  "keywords": [
+    "Framework",
+    "Javascript",
+    "Typescript"
+  ],
+  "author": "Reese Bingham",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/Terracejs/Core/issues"
+  },
+  "homepage": "https://github.com/Terracejs/Core#readme",
+  "devDependencies": {
+    "gulp": "^3.9.1"
+  }
+}
