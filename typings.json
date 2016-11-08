@@ -1,0 +1,10 @@
+{
+  "name": "terracejs_core",
+  "dependencies": {},
+  "globalDevDependencies": {
+    "jasmine": "registry:dt/jasmine#2.5.0+20161025102649"
+  },
+  "globalDependencies": {
+    "node": "registry:dt/node#6.0.0+20161102143327"
+  }
+}
