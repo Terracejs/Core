@@ -1,6 +1,8 @@
 {
   "name": "terracejs_core",
-  "dependencies": {},
+  "dependencies": {
+    "dotenv": "registry:dt/dotenv#2.0.0+20161103000434"
+  },
   "globalDevDependencies": {
     "mocha": "registry:dt/mocha#2.2.5+20161119044246"
   },
