@@ -1,0 +1,6 @@
+./src/global.d.ts:9:: Implement this
+./src/Kernel.ts:28:: Create config loader class
+./src/Services/ChildService.ts:38:: Check that the correct number of workers were started.
+./src/Services/ChildService.ts:49:: Gracefully shutdown child processes
+./dist/Services/ChildService.js:30:: Check that the correct number of workers were started.
+./dist/Services/ChildService.js:39:: Gracefully shutdown child processes
