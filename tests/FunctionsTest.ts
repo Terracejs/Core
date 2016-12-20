@@ -6,7 +6,7 @@ import { public_path, app_path, env, storage_path } from "../src/Functions";
 describe("Function Tests", function () {
 	describe("app_path", function () {
 		it("Should return current path", function () {
-			assert.equal(fs.realpathSync(__dirname + "/../"), app_path());
+			assert.equal(filePath.dirname(require.main.filename), app_path());
 		});
 	});
 
@@ -36,13 +36,13 @@ describe("Function Tests", function () {
 
 	describe("storage_path", function () {
 		it("Should return app_path + storage", function () {
-			let path = filePath.normalize(__dirname + "/../storage");
+			let path = filePath.dirname(require.main.filename) + "/storage";
 			assert.equal(path, storage_path());
 		});
 
 		it("Should return app_path + STORAGE_DIR env value", function () {
 			process.env["STORAGE_DIR"] = "/test123";
-			let path = filePath.normalize(__dirname + "/../test123");
+			let path = filePath.dirname(require.main.filename) + "/test123";
 			assert.equal(path, storage_path());
 			delete process.env["STORAGE_DIR"];
 		});
@@ -50,13 +50,13 @@ describe("Function Tests", function () {
 
 	describe("public_path", function () {
 		it("Should return app_path + public", function () {
-			let path = filePath.normalize(__dirname + "/../public");
+			let path = filePath.dirname(require.main.filename) + "/public";
 			assert.equal(path, public_path());
 		});
 
 		it("Should return app_path + PUBLIC_DIR env value", function () {
 			process.env["PUBLIC_DIR"] = "/test123";
-			let path = filePath.normalize(__dirname + "/../test123");
+			let path = filePath.dirname(require.main.filename) + "/test123";
 			assert.equal(path, public_path());
 			delete process.env["PUBLIC_DIR"];
 		});

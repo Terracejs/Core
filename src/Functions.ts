@@ -7,7 +7,7 @@ import * as filePath from "path";
  * @returns {string} application file path
  */
 export function app_path(): string {
-	return fs.realpathSync(__dirname + "/../");
+	return filePath.dirname(require.main.filename);
 }
 
 /**
