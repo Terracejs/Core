@@ -36,7 +36,7 @@ export function env(variableName: string, defaultValue?: any): any {
  * @returns {string} Application storage directory
  */
 export function storage_path(): string {
-	return app_path() + env('PUBLIC_DIR', '/storage');
+	return app_path() + env('STORAGE_DIR', '/storage');
 }
 
 /**
@@ -50,8 +50,8 @@ export function public_path(): string {
 
 /**
  * Create a random string using the given mask
- * (a for lowercase alpha chars, A for uppercase alpha chars,
- * # for numberic chars and ! for special chars)
+ * ('a' for lowercase alpha chars, 'A' for uppercase alpha chars,
+ * '#' for numberic chars and '!' for special chars)
  * 
  * @param {integer} length The length of the string
  * @param {string} mask The characters that are available
