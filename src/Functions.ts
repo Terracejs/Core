@@ -6,7 +6,7 @@ import * as filePath from "path";
  * 
  * @returns {string} application file path
  */
-function app_path(): string {
+export function app_path(): string {
 	return fs.realpathSync(__dirname + "/../");
 }
 
@@ -17,7 +17,7 @@ function app_path(): string {
  * @param {any} defaultValue Default value if variable isn't found
  * @returns {any} The variables value
  */
-function env(variableName: string, defaultValue: any): any {
+export function env(variableName: string, defaultValue: any): any {
 	if (process.env[variableName] !== undefined) {
 		let temp = process.env[variableName];
 		if (typeof temp === "string" && temp.indexOf(',') !== -1) {
@@ -35,7 +35,7 @@ function env(variableName: string, defaultValue: any): any {
  * 
  * @returns {string} Application storage directory
  */
-function storage_path(): string {
+export function storage_path(): string {
 	return app_path() + env('PUBLIC_DIR', '/storage');
 }
 
@@ -44,7 +44,7 @@ function storage_path(): string {
  * 
  * @returns {string} Application public directory
  */
-function public_path(): string {
+export function public_path(): string {
 	return app_path() + env('PUBLIC_DIR', '/public');
 }
 
@@ -57,7 +57,7 @@ function public_path(): string {
  * @param {string} mask The characters that are available
  * @returns {string} The random string
  */
-function randomString(length: number, mask: string): string {
+export function randomString(length: number, mask: string): string {
 	let chars = '';
 	if (mask.indexOf('a') > -1) chars += 'abcdefghijklmnopqrstuvwxyz';
 	if (mask.indexOf('A') > -1) chars += 'ABCDEFGHIJKLMNOPQRSTUVWXYZ';
@@ -77,7 +77,7 @@ function randomString(length: number, mask: string): string {
  * @param {string} dir The directory to list
  * @param {Function} done Callback once everything is done
  */
-function getFiles(dir: string, done: (err: NodeJS.ErrnoException, results?: Array<string>) => void): void {
+export function getFiles(dir: string, done: (err: NodeJS.ErrnoException, results?: Array<string>) => void): void {
 	let results = [];
 	fs.readdir(dir, (err, list) => {
 		if (err) return done(err);
