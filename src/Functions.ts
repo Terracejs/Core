@@ -17,7 +17,7 @@ export function app_path(): string {
  * @param {any} defaultValue Default value if variable isn't found
  * @returns {any} The variables value
  */
-export function env(variableName: string, defaultValue: any): any {
+export function env(variableName: string, defaultValue?: any): any {
 	if (process.env[variableName] !== undefined) {
 		let temp = process.env[variableName];
 		if (typeof temp === "string" && temp.indexOf(',') !== -1) {
