@@ -1,6 +1,7 @@
 import * as assert from "assert";
 import * as fs from "fs";
 import * as filePath from "path";
+import * as mock_fs from "mock-fs";
 import { public_path, app_path, env, storage_path } from "../src/HelperFunctions";
 
 describe("Function Tests", function () {
@@ -59,6 +60,18 @@ describe("Function Tests", function () {
 			let path = filePath.dirname(require.main.filename) + "/test123";
 			assert.equal(path, public_path());
 			delete process.env["PUBLIC_DIR"];
+		});
+	});
+
+	describe("get_files", function () {
+		before(function () {
+			mock_fs({
+				
+			})
+		});
+
+		after(function () {
+			mock_fs.restore();
 		});
 	});
 });
