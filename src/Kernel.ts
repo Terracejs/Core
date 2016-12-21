@@ -2,7 +2,7 @@ import * as cluster from "cluster";
 import * as env from "dotenv";
 
 import { IService } from "./Services/IService";
-import * as Functions from "./Functions";
+import * as Functions from "./HelperFunctions";
 
 export default class Kernel {
 	private _services: Array<IService>;

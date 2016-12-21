@@ -103,9 +103,3 @@ export function getFiles(dir: string, done: (err: NodeJS.ErrnoException, results
 		});
 	});
 }
-
-global.app_path = app_path;
-global.storage_path = storage_path;
-global.public_path = public_path;
-global.env = env;
-global.randomString = randomString;

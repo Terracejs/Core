@@ -1,7 +1,7 @@
 import * as assert from "assert";
 import * as fs from "fs";
 import * as filePath from "path";
-import { public_path, app_path, env, storage_path } from "../src/Functions";
+import { public_path, app_path, env, storage_path } from "../src/HelperFunctions";
 
 describe("Function Tests", function () {
 	describe("app_path", function () {
