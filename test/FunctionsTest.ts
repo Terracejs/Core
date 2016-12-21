@@ -62,16 +62,4 @@ describe("Function Tests", function () {
 			delete process.env["PUBLIC_DIR"];
 		});
 	});
-
-	describe("get_files", function () {
-		before(function () {
-			mock_fs({
-				
-			})
-		});
-
-		after(function () {
-			mock_fs.restore();
-		});
-	});
 });

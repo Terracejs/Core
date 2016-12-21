@@ -72,34 +72,47 @@ export function randomString(length: number, mask: string): string {
 }
 
 /**
- * Provides an array of all files and sub-folders in a directory
+ * Provides an array of all files and files in sub-folders in a directory
  * 
  * @param {string} dir The directory to list
- * @param {Function} done Callback once everything is done
+ * @param {RegExp|Callback} filter Optional filter
+ * @param {Callback} done Callback once everything is done
  */
-export function get_files(dir: string, done: (err: NodeJS.ErrnoException, results?: Array<string>) => void): void {
+export function get_files(dir: string, filter: RegExp|Callback, done?: Callback): void {
+	if(done === undefined){
+		done = (<Callback>filter);
+		filter = undefined;
+	}
+
 	let results = [];
-	fs.readdir(dir, (err, list) => {
-		if (err) return done(err);
+	try{
+		fs.readdir(dir, (err, list) => {
+			if (err) return done(err);
 
-		let pending = list.length;
-		if (!pending) return done(null, results);
+			let pending = list.length;
+			if (!pending) return done(null, results);
 
-		list.forEach((fileName: string) => {
-			let file = filePath.resolve(dir, fileName);
+			list.forEach((fileName: string) => {
+				let file = filePath.resolve(dir, fileName);
 
-			fs.stat(file, (err, stat) => {
-				if (stat && stat.isDirectory()) {
-					get_files(file, (err, res) => {
-						results = results.concat(res);
+				fs.stat(file, (err, stat) => {
+					if (stat && stat.isDirectory()) {
+						get_files(file, filter, (err, res) => {
+							results = results.concat(res);
+							if (!--pending) done(null, results);
+						});
+					} else {
+						if(filter === undefined || (<RegExp>filter).test(file))
+							results.push({ file, fileName });
 						if (!--pending) done(null, results);
-					});
-				} else {
-					results.push({ file, fileName });
-					if (!--pending) done(null, results);
-				}
-			});
+					}
+				});
 
+			});
 		});
-	});
+	} catch(err){
+		done(err);
+	}
 }
+
+export type Callback = (err: NodeJS.ErrnoException, results?: any) => void;
