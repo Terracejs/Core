@@ -8,5 +8,8 @@
   },
   "globalDependencies": {
     "node": "registry:dt/node#6.0.0+20161212163245"
+  },
+  "devDependencies": {
+    "mock-fs": "registry:dt/mock-fs#3.6.0+20161128224320"
   }
 }
