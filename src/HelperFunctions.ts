@@ -77,7 +77,7 @@ export function randomString(length: number, mask: string): string {
  * @param {string} dir The directory to list
  * @param {Function} done Callback once everything is done
  */
-export function getFiles(dir: string, done: (err: NodeJS.ErrnoException, results?: Array<string>) => void): void {
+export function get_files(dir: string, done: (err: NodeJS.ErrnoException, results?: Array<string>) => void): void {
 	let results = [];
 	fs.readdir(dir, (err, list) => {
 		if (err) return done(err);
@@ -90,7 +90,7 @@ export function getFiles(dir: string, done: (err: NodeJS.ErrnoException, results
 
 			fs.stat(file, (err, stat) => {
 				if (stat && stat.isDirectory()) {
-					getFiles(file, (err, res) => {
+					get_files(file, (err, res) => {
 						results = results.concat(res);
 						if (!--pending) done(null, results);
 					});
