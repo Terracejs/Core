@@ -78,13 +78,13 @@ export function randomString(length: number, mask: string): string {
  * @param {RegExp|Callback} filter Optional filter
  * @param {Callback} done Callback once everything is done
  */
-export function get_files(dir: string, filter: RegExp|Callback, done?: Callback): void {
+export function get_files(dir: string, filter: RegExp|GetFilesCallback, done?: GetFilesCallback): void {
 	if(done === undefined){
-		done = (<Callback>filter);
+		done = (<GetFilesCallback>filter);
 		filter = undefined;
 	}
 
-	let results = [];
+	let results: Array<FileResult> = [];
 	try{
 		fs.readdir(dir, (err, list) => {
 			if (err) return done(err);
@@ -103,7 +103,7 @@ export function get_files(dir: string, filter: RegExp|Callback, done?: Callback)
 						});
 					} else {
 						if(filter === undefined || (<RegExp>filter).test(file))
-							results.push({ file, fileName });
+							results.push({ filePath: file, fileName: fileName });
 						if (!--pending) done(null, results);
 					}
 				});
@@ -115,4 +115,25 @@ export function get_files(dir: string, filter: RegExp|Callback, done?: Callback)
 	}
 }
 
-export type Callback = (err: NodeJS.ErrnoException, results?: any) => void;
+/**
+ * Describes what the callback for get_files looks like
+ * 
+ * @param  {NodeJS.ErrnoException|null} err The error that occurred
+ * @param {Array<FileResult>} results The results of the request
+ */
+export type GetFilesCallback = (err: NodeJS.ErrnoException, results?: Array<FileResult>) => void;
+
+/**
+ * Describes the results from the get_files function
+ */
+export interface FileResult {
+	/**
+	 * The file path including filename of the file
+	 */
+	filePath: string;
+
+	/**
+	 * The name without the filepath
+	 */
+	fileName: string;
+}
