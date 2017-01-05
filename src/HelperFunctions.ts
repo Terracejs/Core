@@ -83,17 +83,17 @@ export async function get_files(dir: string, filter?: RegExp): Promise<Array<Fil
 
 	try {
 		let files: Array<FileResult> = await readDir(dir),
-				promises: Array<Promise<Array<FileResult>>> = [];
+			promises: Array<Promise<Array<FileResult>>> = [];
 
 		for (let file of files) {
-			if(file.stats.isDirectory()){
+			if (file.stats.isDirectory()) {
 				promises.push(readDir(file.filePath));
 			} else {
 				results.push(file);
 			}
 		}
 
-		for(files of await Promise.all(promises)){
+		for (files of await Promise.all(promises)) {
 			results.concat(files);
 		}
 
@@ -108,13 +108,21 @@ async function readDir(dir: string): Promise<Array<FileResult>> {
 	return new Promise<Array<FileResult>>(async (resolve, reject): Promise<void> => {
 		fs.readdir(dir, async (err, files): Promise<void> => {
 			let stats: Array<FileResult> = [],
-					temp: FileResult;
+				temp: FileResult;
+				
 			if (!err) {
-				for(let file of files){
-					temp = await readStat(file, dir);
-					stats.push(temp);
+				try {
+
+					for (let file of files) {
+						temp = await readStat(file, dir);
+						stats.push(temp);
+					}
+
+					resolve(stats);
+
+				} catch (e) {
+					reject(e);
 				}
-				resolve(stats);
 			} else {
 				reject(err);
 			}
@@ -125,7 +133,7 @@ async function readDir(dir: string): Promise<Array<FileResult>> {
 async function readStat(filename: string, dir: string): Promise<FileResult> {
 	return new Promise<FileResult>((resolve, reject) => {
 		fs.stat(filePath.resolve(dir, filename), (err, stat) => {
-			if(!err){
+			if (!err) {
 				resolve({
 					fileName: filePath.resolve(dir, filename),
 					filePath: dir,
