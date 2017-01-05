@@ -2,7 +2,7 @@ import * as assert from "assert";
 import * as fs from "fs";
 import * as filePath from "path";
 import * as mock_fs from "mock-fs";
-import { public_path, app_path, env, storage_path } from "../src/HelperFunctions";
+import { public_path, app_path, env, storage_path, get_files } from "../src/HelperFunctions";
 
 describe("Function Tests", function () {
 	describe("app_path", function () {
@@ -60,6 +60,32 @@ describe("Function Tests", function () {
 			let path = filePath.dirname(require.main.filename) + "/test123";
 			assert.equal(path, public_path());
 			delete process.env["PUBLIC_DIR"];
+		});
+	});
+
+	describe("get_files", function () {
+		before(function (done) {
+			mock_fs({
+				'path/to/fake/dir': {
+					'some-file.txt': 'file content here',
+					'empty-dir': {/** empty directory */ }
+				},
+				'path/to/some.png': new Buffer([8, 6, 7, 5, 3, 0, 9]),
+				'some/other/path': {/** another empty directory */ }
+			});
+			done();
+		});
+
+		after(function (done) {
+			mock_fs.restore();
+			done();
+		});
+
+		it("should work", function () {
+			return get_files('./path/to/fake/dir')
+				.then((results) => {
+					assert.equal(results.length, 1);
+				});
 		});
 	});
 });

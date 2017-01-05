@@ -76,52 +76,67 @@ export function randomString(length: number, mask: string): string {
  * 
  * @param {string} dir The directory to list
  * @param {RegExp|Callback} filter Optional filter
- * @param {Callback} done Callback once everything is done
+ * @returns {Promise}
  */
-export function get_files(dir: string, filter: RegExp|GetFilesCallback, done?: GetFilesCallback): void {
-	if(done === undefined){
-		done = (<GetFilesCallback>filter);
-		filter = undefined;
-	}
-
+export async function get_files(dir: string, filter?: RegExp): Promise<Array<FileResult>> {
 	let results: Array<FileResult> = [];
-	try{
-		fs.readdir(dir, (err, list) => {
-			if (err) return done(err);
 
-			let pending = list.length;
-			if (!pending) return done(null, results);
+	try {
+		let files: Array<FileResult> = await readDir(dir),
+				promises: Array<Promise<Array<FileResult>>> = [];
 
-			list.forEach((fileName: string) => {
-				let file = filePath.resolve(dir, fileName);
+		for (let file of files) {
+			if(file.stats.isDirectory()){
+				promises.push(readDir(file.filePath));
+			} else {
+				results.push(file);
+			}
+		}
 
-				fs.stat(file, (err, stat) => {
-					if (stat && stat.isDirectory()) {
-						get_files(file, filter, (err, res) => {
-							results = results.concat(res);
-							if (!--pending) done(null, results);
-						});
-					} else {
-						if(filter === undefined || (<RegExp>filter).test(file))
-							results.push({ filePath: file, fileName: fileName });
-						if (!--pending) done(null, results);
-					}
-				});
+		for(files of await Promise.all(promises)){
+			results.concat(files);
+		}
 
-			});
-		});
-	} catch(err){
-		done(err);
+	} catch (err) {
+		throw err;
 	}
+
+	return results;
 }
 
-/**
- * Describes what the callback for get_files looks like
- * 
- * @param  {NodeJS.ErrnoException|null} err The error that occurred
- * @param {Array<FileResult>} results The results of the request
- */
-export type GetFilesCallback = (err: NodeJS.ErrnoException, results?: Array<FileResult>) => void;
+async function readDir(dir: string): Promise<Array<FileResult>> {
+	return new Promise<Array<FileResult>>(async (resolve, reject): Promise<void> => {
+		fs.readdir(dir, async (err, files): Promise<void> => {
+			let stats: Array<FileResult> = [],
+					temp: FileResult;
+			if (!err) {
+				for(let file of files){
+					temp = await readStat(file, dir);
+					stats.push(temp);
+				}
+				resolve(stats);
+			} else {
+				reject(err);
+			}
+		});
+	});
+}
+
+async function readStat(filename: string, dir: string): Promise<FileResult> {
+	return new Promise<FileResult>((resolve, reject) => {
+		fs.stat(filePath.resolve(dir, filename), (err, stat) => {
+			if(!err){
+				resolve({
+					fileName: filePath.resolve(dir, filename),
+					filePath: dir,
+					stats: stat
+				});
+			} else {
+				reject(err);
+			}
+		});
+	});
+}
 
 /**
  * Describes the results from the get_files function
@@ -136,4 +151,9 @@ export interface FileResult {
 	 * The name without the filepath
 	 */
 	fileName: string;
+
+	/**
+	 * The FS stats object for the file
+	 */
+	stats: fs.Stats;
 }
