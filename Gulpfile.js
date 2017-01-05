@@ -10,7 +10,7 @@ gulp.task('default', ['ts'], function () {
 });
 
 gulp.task('ts', function () {
-	gulp.src(["./src/**/*.ts", "./typings**/*.d.ts"])
+	gulp.src(["./src/**/*.ts", "./typings/**/*.d.ts"])
 		.pipe(tsProject())
 		.pipe(gulp.dest("dist/"));
 });
