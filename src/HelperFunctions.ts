@@ -48,6 +48,10 @@ export function public_path(): string {
 	return app_path() + env('PUBLIC_DIR', '/public');
 }
 
+export function config_path(): string {
+	return app_path() + env('CONFIG_DIR', '/config');
+}
+
 /**
  * Create a random string using the given mask
  * ('a' for lowercase alpha chars, 'A' for uppercase alpha chars,
