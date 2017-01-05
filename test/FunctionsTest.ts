@@ -66,12 +66,12 @@ describe("Function Tests", function () {
 	describe("get_files", function () {
 		before(function (done) {
 			mock_fs({
-				'path/to/fake/dir': {
+				'config': {
 					'some-file.txt': 'file content here',
-					'empty-dir': {/** empty directory */ }
+					'empty-dir': {/** empty directory */ },
+					'some.png': new Buffer([8, 6, 7, 5, 3, 0, 9]),
 				},
-				'path/to/some.png': new Buffer([8, 6, 7, 5, 3, 0, 9]),
-				'some/other/path': {/** another empty directory */ }
+				'app': {/** another empty directory */ }
 			});
 			done();
 		});
@@ -81,10 +81,10 @@ describe("Function Tests", function () {
 			done();
 		});
 
-		it("should work", function () {
-			return get_files('./path/to/fake/dir')
+		it("Return 2 files", function () {
+			return get_files('./config')
 				.then((results) => {
-					assert.equal(results.length, 1);
+					assert.equal(results.length, 2);
 				});
 		});
 	});
