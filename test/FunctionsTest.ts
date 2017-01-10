@@ -68,7 +68,9 @@ describe("Function Tests", function () {
 			mock_fs({
 				'config': {
 					'some-file.txt': 'file content here',
-					'empty-dir': {/** empty directory */ },
+					'Services': {
+						'another-file.txt': 'some more content'
+					},
 					'some.png': new Buffer([8, 6, 7, 5, 3, 0, 9]),
 				},
 				'app': {/** another empty directory */ }
@@ -81,11 +83,10 @@ describe("Function Tests", function () {
 			done();
 		});
 
-		it("Return 2 files", function () {
-			return get_files('./config')
-				.then((results) => {
-					assert.equal(results.length, 2);
-				});
+		it("Lists all files in the config dir", async function () {
+			let results = await get_files('./config');
+
+			assert.equal(results.length, 3);
 		});
 	});
 });
