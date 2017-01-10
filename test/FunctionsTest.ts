@@ -88,5 +88,13 @@ describe("Function Tests", function () {
 
 			assert.equal(results.length, 3);
 		});
+
+		it("Should throw an error on missing directory", async function () {
+			try {
+				let temp = await get_files('./missing');
+			} catch (e) {
+				assert.equal(true, e instanceof Error);
+			}
+		});
 	});
 });
