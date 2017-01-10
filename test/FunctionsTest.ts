@@ -91,10 +91,15 @@ describe("Function Tests", function () {
 
 		it("Should throw an error on missing directory", async function () {
 			try {
-				let temp = await get_files('./missing');
+				let results = await get_files('./missing');
 			} catch (e) {
 				assert.equal(true, e instanceof Error);
 			}
+		});
+
+		it("Should filter by filename", async function () {
+			let results = await get_files('./config', /file/);
+			assert.equal(2, results.length);
 		});
 	});
 });

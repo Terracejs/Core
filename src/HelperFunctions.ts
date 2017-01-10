@@ -82,7 +82,7 @@ export function randomString(length: number, mask: string): string {
  * @param {RegExp|Callback} filter Optional filter
  * @returns {Promise}
  */
-export async function get_files(dir: string, filter?: RegExp): Promise<Array<FileResult>> {
+export async function get_files(dir: string, filter = /.*/): Promise<Array<FileResult>> {
 	let results: Array<FileResult> = [];
 
 	try {
@@ -93,7 +93,8 @@ export async function get_files(dir: string, filter?: RegExp): Promise<Array<Fil
 			if (file.stats.isDirectory()) {
 				promises.push(get_files(file.fileName));
 			} else {
-				results.push(file);
+				if(filter.test(file.fileName))
+					results.push(file);
 			}
 		}
 
