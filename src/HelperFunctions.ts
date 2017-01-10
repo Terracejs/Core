@@ -91,14 +91,14 @@ export async function get_files(dir: string, filter?: RegExp): Promise<Array<Fil
 
 		for (let file of files) {
 			if (file.stats.isDirectory()) {
-				promises.push(readDir(file.filePath));
+				promises.push(get_files(file.fileName));
 			} else {
 				results.push(file);
 			}
 		}
 
 		for (files of await Promise.all(promises)) {
-			results.concat(files);
+			results = results.concat(files);
 		}
 
 	} catch (err) {
@@ -113,7 +113,7 @@ async function readDir(dir: string): Promise<Array<FileResult>> {
 		fs.readdir(dir, async (err, files): Promise<void> => {
 			let stats: Array<FileResult> = [],
 				temp: FileResult;
-				
+
 			if (!err) {
 				try {
 
