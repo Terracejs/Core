@@ -67,11 +67,10 @@ describe("Function Tests", function () {
 		before(function (done) {
 			mock_fs({
 				'config': {
-					'some-file.txt': 'file content here',
+					'a-file.txt': 'file content here',
 					'Services': {
 						'another-file.txt': 'some more content'
-					},
-					'some.png': new Buffer([8, 6, 7, 5, 3, 0, 9]),
+					}
 				},
 				'app': {/** another empty directory */ }
 			});
@@ -84,9 +83,10 @@ describe("Function Tests", function () {
 		});
 
 		it("Lists all files in the config dir", async function () {
-			let results = await get_files('./config');
+			let results = await get_files('./config'),
+				length = results.length;
 
-			assert.equal(results.length, 3);
+			assert.equal(2, results.length);
 		});
 
 		it("Should throw an error on missing directory", async function () {
@@ -98,8 +98,9 @@ describe("Function Tests", function () {
 		});
 
 		it("Should filter by filename", async function () {
-			let results = await get_files('./config', /file/);
-			assert.equal(2, results.length);
+			let results = await get_files('./config', /a-file\.txt/),
+				length = results.length;
+			assert.equal(1, length);
 		});
 	});
 });

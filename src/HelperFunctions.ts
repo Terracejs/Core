@@ -79,7 +79,7 @@ export function randomString(length: number, mask: string): string {
  * Provides an array of all files and files in sub-folders in a directory
  * 
  * @param {string} dir The directory to list
- * @param {RegExp|Callback} filter Optional filter
+ * @param {RegExp} [filter=/.* /] Optional filter
  * @returns {Promise}
  */
 export async function get_files(dir: string, filter = /.*/): Promise<Array<FileResult>> {
@@ -91,7 +91,7 @@ export async function get_files(dir: string, filter = /.*/): Promise<Array<FileR
 
 		for (let file of files) {
 			if (file.stats.isDirectory()) {
-				promises.push(get_files(file.fileName));
+				promises.push(get_files(file.fileName, filter));
 			} else {
 				if(filter.test(file.fileName))
 					results.push(file);
