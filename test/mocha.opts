@@ -1,2 +1,2 @@
---require ts-node/register
+--compilers ts:ts-node/register
 ./test/**/*.ts
