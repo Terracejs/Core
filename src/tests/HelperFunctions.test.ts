@@ -4,7 +4,7 @@ import * as filePath from "path";
 import * as mock_fs from "mock-fs";
 import { public_path, app_path, env, storage_path, get_files } from "../HelperFunctions";
 
-describe("Function Tests", function () {
+describe("Helper Function Tests", function () {
 	describe("app_path", function () {
 		it("Should return current path", function () {
 			assert.equal(filePath.dirname(require.main.filename), app_path());
