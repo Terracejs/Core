@@ -1,0 +1,23 @@
+{
+  "name": "@terracejs/core",
+  "version": "0.0.1",
+  "description": "The Core Terracejs package",
+  "main": "index.js",
+  "repository": {
+    "type": "git",
+    "url": "git+ssh://git@github.com/Terracejs/Core.git"
+  },
+  "keywords": [
+    "Framework",
+    "Javascript",
+    "Typescript"
+  ],
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/Terracejs/Core/issues"
+  },
+  "homepage": "https://github.com/Terracejs/Core#readme",
+  "dependencies": {
+    "dotenv": "^2.0.0"
+  }
+}
