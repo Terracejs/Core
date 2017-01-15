@@ -2,6 +2,7 @@ import * as assert from "assert";
 import * as fs from "fs";
 import * as filePath from "path";
 import * as mock_fs from "mock-fs";
+import * as mocha from "mocha";
 import { public_path, app_path, env, storage_path, get_files } from "../HelperFunctions";
 
 describe("Helper Function Tests", function () {
