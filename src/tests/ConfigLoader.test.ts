@@ -2,22 +2,21 @@ import * as assert from "assert";
 import * as mock_fs from "mock-fs";
 import * as fs from "fs";
 import * as mocha from 'mocha';
+import * as mock from "mock-require";
+import * as rewire from "rewire";
+import { dirname } from "path";
 import ConfigLoader from "../ConfigLoader";
 
+before(function () {
+	mock(dirname(require.main.filename) + "/config/test.config.js", {});
+	mock(dirname(require.main.filename) + "/config/test2.config.js", {});
+});
+
+after(function () {
+	mock.stopAll();
+});
 
 describe("ConfigLoader Tests", function () {
-	before(function () {
-		mock_fs({
-			'config': {
-				'test1.config.js': "module.exports = {};",
-				'Services': {
-					'test2.config.js': 'module.exports = {};'
-				}
-			},
-			'app': {/** another empty directory */ }
-		});
-	});
-
 	after(function () {
 		mock_fs.restore();
 	});

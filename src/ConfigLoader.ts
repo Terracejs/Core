@@ -13,7 +13,7 @@ export default class ConfigLoader extends EventEmitter {
 	/**
 	 * The location of the configuration files
 	 */
-	private _configDir: string = "./config"; //config_path();
+	private _configDir: string = config_path();
 
 	/**
 	 * 
