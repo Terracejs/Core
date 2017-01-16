@@ -42,8 +42,7 @@ export default class ConfigLoader extends EventEmitter {
 	 */
 	public async load(): Promise<void> {
 		try {
-			let fileList: Array<FileResult> = await this.getFileList(),
-				errors
+			let fileList: Array<FileResult> = await this.getFileList();
 
 			for (let file of fileList) {
 				let data = this.readFile(file.fileName);
