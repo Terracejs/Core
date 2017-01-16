@@ -9,6 +9,7 @@ import gulpClean = require('gulp-clean');
 import gulpSourcemaps = require("gulp-sourcemaps");
 import merge2 = require("merge2");
 import sequence = require("run-sequence");
+import mocha = require("gulp-mocha");
 
 function _globify(maybeGlob: string, suffix = '**/*') {
 	if (maybeGlob.indexOf('*') != -1) {
@@ -27,8 +28,14 @@ export function cleanTask(glob: string) {
 	return () => gulp.src(glob, { read: false }).pipe(gulpClean(null));
 }
 
-export function mochaTask(glob: string) {
-	return () => { };
+export function mochaTask(glob: string | string[]) {
+	if (typeof glob === 'string') {
+		return () => gulp.src(_globify(glob), { read: false })
+			.pipe(mocha());
+	} else {
+		return () => gulp.src(glob.map(glob => _globify(glob)), { read: false })
+			.pipe(mocha());
+	}
 }
 
 export function tsBuildTask(configPath: string, configName = 'tsconfig.json') {
