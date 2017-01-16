@@ -1,5 +1,5 @@
 import { IService } from "./IService";
-import { Worker } from "cluster";
+import Kernel from "../Kernel";
 
 /**
  * Service implementation that includes
@@ -7,7 +7,6 @@ import { Worker } from "cluster";
  */
 export abstract class ChildService implements IService {
 	private _running: boolean = false;
-	private _workers: Map<number, Worker>;
 	protected workerLimit: number = 2;
 
 	/**
@@ -26,18 +25,11 @@ export abstract class ChildService implements IService {
 	 * 
 	 * @returns {Promise<boolean>} Whether the service started correctly
 	 */
-	public Start(): Promise<boolean> {
-		let worker: Worker;
-		for (let count = 0; count < this.workerLimit; count++) {
-			worker = this.startWorker();
+	public async Start(): Promise<boolean> {
 
-			if(worker)
-				this._workers.set(worker.process.pid, worker);
-		}
-
-		// TODO: Check that the correct number of workers were started.
-
-		return this.begin();
+		// TODO: Add requesting child processes from kernel
+		
+		return await this.begin();
 	}
 
 	/**
@@ -45,10 +37,8 @@ export abstract class ChildService implements IService {
 	 * 
 	 * @returns {Promise<boolean>} Whether the service stopped correctly
 	 */
-	public Stop(): Promise<boolean> {
-		// TODO: Gracefully shutdown child processes
-		
-		return this.end();
+	public async Stop(): Promise<boolean> {		
+		return await this.end();
 	}
 
 	/**
@@ -65,11 +55,4 @@ export abstract class ChildService implements IService {
 	 * Finish running the service and perform clean-up
 	 */
 	protected abstract end(): Promise<boolean>;
-
-	/**
-	 * Start a worker process and set appropriate event handlers
-	 */
-	private startWorker(): Worker {
-		return undefined;
-	}
 }
