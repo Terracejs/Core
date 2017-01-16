@@ -76,6 +76,4 @@ describe("ConfigLoader Tests", function () {
 			assert.equal(obj[0], config["getValue"](obj, ["", "0"], 1));
 		});
 	});
-
-
 });
