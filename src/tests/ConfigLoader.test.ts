@@ -1,9 +1,5 @@
-import * as rewire from "rewire";
 import * as assert from "assert";
-import * as mock_fs from "mock-fs";
-import * as fs from "fs";
 import * as mocha from 'mocha';
-import { dirname } from "path";
 import ConfigLoader from "../ConfigLoader";
 
 

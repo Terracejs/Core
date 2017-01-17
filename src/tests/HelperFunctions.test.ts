@@ -1,39 +1,12 @@
 import * as assert from "assert";
-import * as fs from "fs";
-import * as filePath from "path";
-import * as mock_fs from "mock-fs";
 import * as mocha from "mocha";
 import { dirname } from "path";
-import * as mock from "mock-require";
 import { public_path, app_path, env, storage_path, get_files } from "../HelperFunctions";
-
-before(function () {
-	mock(dirname(require.main.filename) + "/config/test.config.js", {});
-	mock(dirname(require.main.filename) + "/config/test2.config.js", {});
-	let configDir = `${dirname(require.main.filename)}/config`;
-	let directory = {
-		'app': {/** another empty directory */ }
-	};
-	directory[configDir] = {
-		'a-file.txt': 'file content here',
-		'test2.config.js': 'stuff',
-		'test1.config.js': 'stuff',
-		'Services': {
-			'another-file.txt': 'some more content'
-		}
-	};
-	mock_fs(directory);
-});
-
-after(function () {
-	mock.stopAll();
-	mock_fs.restore();
-});
 
 describe("Helper Function Tests", function () {
 	describe("app_path", function () {
 		it("Should return current path", function () {
-			assert.equal(filePath.dirname(require.main.filename), app_path());
+			assert.equal(dirname(require.main.filename), app_path());
 		});
 	});
 
@@ -63,13 +36,13 @@ describe("Helper Function Tests", function () {
 
 	describe("storage_path", function () {
 		it("Should return app_path + storage", function () {
-			let path = filePath.dirname(require.main.filename) + "/storage";
+			let path = dirname(require.main.filename) + "/storage";
 			assert.equal(path, storage_path());
 		});
 
 		it("Should return app_path + STORAGE_DIR env value", function () {
 			process.env["STORAGE_DIR"] = "/test123";
-			let path = filePath.dirname(require.main.filename) + "/test123";
+			let path = dirname(require.main.filename) + "/test123";
 			assert.equal(path, storage_path());
 			delete process.env["STORAGE_DIR"];
 		});
@@ -77,13 +50,13 @@ describe("Helper Function Tests", function () {
 
 	describe("public_path", function () {
 		it("Should return app_path + public", function () {
-			let path = filePath.dirname(require.main.filename) + "/public";
+			let path = dirname(require.main.filename) + "/public";
 			assert.equal(path, public_path());
 		});
 
 		it("Should return app_path + PUBLIC_DIR env value", function () {
 			process.env["PUBLIC_DIR"] = "/test123";
-			let path = filePath.dirname(require.main.filename) + "/test123";
+			let path = dirname(require.main.filename) + "/test123";
 			assert.equal(path, public_path());
 			delete process.env["PUBLIC_DIR"];
 		});
