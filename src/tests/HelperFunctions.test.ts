@@ -3,7 +3,32 @@ import * as fs from "fs";
 import * as filePath from "path";
 import * as mock_fs from "mock-fs";
 import * as mocha from "mocha";
+import { dirname } from "path";
+import * as mock from "mock-require";
 import { public_path, app_path, env, storage_path, get_files } from "../HelperFunctions";
+
+before(function () {
+	mock(dirname(require.main.filename) + "/config/test.config.js", {});
+	mock(dirname(require.main.filename) + "/config/test2.config.js", {});
+	let configDir = `${dirname(require.main.filename)}/config`;
+	let directory = {
+		'app': {/** another empty directory */ }
+	};
+	directory[configDir] = {
+		'a-file.txt': 'file content here',
+		'test2.config.js': 'stuff',
+		'test1.config.js': 'stuff',
+		'Services': {
+			'another-file.txt': 'some more content'
+		}
+	};
+	mock_fs(directory);
+});
+
+after(function () {
+	mock.stopAll();
+	mock_fs.restore();
+});
 
 describe("Helper Function Tests", function () {
 	describe("app_path", function () {
@@ -65,41 +90,23 @@ describe("Helper Function Tests", function () {
 	});
 
 	describe("get_files", function () {
-		before(function (done) {
-			mock_fs({
-				'config': {
-					'a-file.txt': 'file content here',
-					'Services': {
-						'another-file.txt': 'some more content'
-					}
-				},
-				'app': {/** another empty directory */ }
-			});
-			done();
-		});
-
-		after(function (done) {
-			mock_fs.restore();
-			done();
-		});
-
 		it("Lists all files in the config dir", async function () {
-			let results = await get_files('./config'),
+			let results = await get_files(`${dirname(require.main.filename)}/config`),
 				length = results.length;
 
-			assert.equal(2, results.length);
+			assert.equal(4, results.length);
 		});
 
 		it("Should throw an error on missing directory", async function () {
 			try {
-				let results = await get_files('./missing');
+				let results = await get_files(`${dirname(require.main.filename)}/missing`);
 			} catch (e) {
 				assert.equal(true, e instanceof Error);
 			}
 		});
 
 		it("Should filter by filename", async function () {
-			let results = await get_files('./config', /a-file\.txt/),
+			let results = await get_files(`${dirname(require.main.filename)}/config`, /a-file\.txt/),
 				length = results.length;
 			assert.equal(1, length);
 		});

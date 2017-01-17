@@ -3,22 +3,9 @@ import * as assert from "assert";
 import * as mock_fs from "mock-fs";
 import * as fs from "fs";
 import * as mocha from 'mocha';
-import * as mock from "mock-require";
 import { dirname } from "path";
-
-const Config = rewire("../ConfigLoader");
-
 import ConfigLoader from "../ConfigLoader";
-import { get_files, FileResult } from "../HelperFunctions";
 
-before(function () {
-	mock(dirname(require.main.filename) + "/config/test.config.js", {});
-	mock(dirname(require.main.filename) + "/config/test2.config.js", {});
-});
-
-after(function () {
-	mock.stopAll();
-});
 
 describe("ConfigLoader Tests", function () {
 	describe("Instance", function () {
@@ -28,27 +15,6 @@ describe("ConfigLoader Tests", function () {
 	});
 
 	describe("getFileList", function () {
-		let revert;
-		before(function () {
-			revert = Config.__set__("HelperFunctions_1.get_files",
-				async function (dir: string, filter = /.*/): Promise<Array<FileResult>> {
-
-					return [{
-						fileName: dirname(require.main.filename) + "/config/test.config.js",
-						filePath: dirname(require.main.filename),
-						stats: undefined
-					}, {
-						fileName: dirname(require.main.filename) + "/config/test.config.js",
-						filePath: dirname(require.main.filename),
-						stats: undefined
-					}];
-			});
-		});
-
-		after(function () {
-			revert();
-		});
-
 		it("returns all .config.js files in config dir", async function () {
 			let files = await ConfigLoader.Instance["getFileList"]();
 			assert.equal(2, files.length);
