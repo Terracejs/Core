@@ -2,6 +2,11 @@ stages:
     - build
     - test
 
+cache:
+    key: "$CI_BUILD_REF_NAME"
+    paths:
+        - node_modules
+
 build:6.9:
     image: node:6.9
     stage: build
