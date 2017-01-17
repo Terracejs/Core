@@ -1,0 +1,29 @@
+stages:
+    - build
+    - test
+
+build:6.9:
+    image: node:6.9
+    stage: build
+    script:
+        - npm install
+        - gulp build:development
+
+test:6.9:
+    image: node:6.9
+    stage: test
+    script:
+        - gulp run:tests
+
+build:7.4:
+    image: node:7.4
+    stage: build
+    script:
+        - npm install
+        - gulp build:development
+
+test:7.4:
+    image: node:7.4
+    stage: test
+    script:
+        - gulp run:tests
