@@ -162,7 +162,7 @@ export default class ConfigLoader extends EventEmitter {
 	 * 
 	 * @returns {ConfigLoader} Config loader instance
 	 */
-	static get Instance(): ConfigLoader {
+	public static get Instance(): ConfigLoader {
 		if (this._instance === undefined) {
 			this._instance = new ConfigLoader();
 		}
