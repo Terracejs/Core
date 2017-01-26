@@ -8,6 +8,7 @@ import Kernel from "../Kernel";
 export abstract class ChildService implements IService {
 	private _running: boolean = false;
 	protected workerLimit: number = 2;
+	public Name: string;
 
 	/**
 	 * Public accessor for whether the service is running
@@ -40,6 +41,7 @@ export abstract class ChildService implements IService {
 	public async Stop(): Promise<boolean> {		
 		return await this.end();
 	}
+
 
 	/**
 	 * Initializes the service

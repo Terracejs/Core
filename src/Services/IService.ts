@@ -16,4 +16,9 @@ export interface IService {
 	 * Whether the service is currently running
 	 */
 	Running: boolean;
+
+	/**
+	 * The name of the service
+	 */
+	Name: string;
 }
