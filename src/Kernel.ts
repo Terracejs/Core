@@ -33,9 +33,7 @@ export default class Kernel extends EventEmitter {
 	public async Start(): Promise<boolean> {
 		await this.Initialize(ConfigLoader.Instance);
 
-	public constructor() {
-		this.loadEnv();
-		this.initialize();
+		if (this._initialized) {
 	}
 
 	/**
