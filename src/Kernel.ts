@@ -42,11 +42,21 @@ export default class Kernel {
 		return loader.load();
 	}
 
-	private loadEnv(): void {
-		env.config({silent: true});
+	/**
+	 * Singleton instance of the class
+	 */
+	private static _instance: Kernel;
+
+	/**
+	 * Get the Kernel Instance
+	 * 
+	 * @returns {Kernel} Kernel instance
+	 */
+	public static get Instance(): Kernel {
+		if (this._instance === undefined) {
+			this._instance = new Kernel();
 	}
 
-	private initialize(): void {
-		// TODO: Create config loader class
+		return this._instance;
 	}
 }
