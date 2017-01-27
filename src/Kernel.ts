@@ -34,6 +34,8 @@ export default class Kernel extends EventEmitter {
 		await this.Initialize(ConfigLoader.Instance);
 
 		if (this._initialized) {
+		}
+		return false;
 	}
 
 	/**
