@@ -1,8 +1,34 @@
 import * as cluster from "cluster";
 import * as env from "dotenv";
+import { EventEmitter } from "events";
 
-import { IService } from "./Services/IService";
-import * as Functions from "./HelperFunctions";
+import { IService, IServiceDetails } from "./Services/IService";
+import * as Helpers from "./HelperFunctions";
+import ConfigLoader from "./ConfigLoader";
+
+/**
+ * Class for initializing and managing the various
+ * processes and services of the application.
+ * 
+ * @fires Kernel#initialized
+ * @fires Kernel#loaded
+ */
+export default class Kernel extends EventEmitter {
+	private _services: Map<string, IService>;
+	private _initialized: boolean = false;
+
+	/**
+	 * Whether the Kernel is initialized
+	 */
+	public get initialized(): boolean { return this._initialized };
+
+	/**
+	 * Private constructor to create a singleton
+	 */
+	private constructor() {
+		super();
+		this._services = new Map<string, IService>();
+	}
 
 export default class Kernel {
 	private _services: Array<IService>;
