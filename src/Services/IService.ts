@@ -22,3 +22,20 @@ export interface IService {
 	 */
 	Name: string;
 }
+
+/**
+ * Interface for how to load a service
+ */
+export interface IServiceDetails {
+	/**
+	 * Service name
+	 */
+	name: string,
+
+	/**
+	 * Service file location. Default location in
+	 * ${app_path()}/services/${IServiceDefinition.name}.service.js
+	 * 
+	 */
+	location?: string
+}
