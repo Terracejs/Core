@@ -12,12 +12,31 @@ export default class Kernel {
 		this.initialize();
 	}
 
-	public LoadServices(): Promise<boolean> {
+	/**
+	 * Load the services into memory
+	 * 
+	 * @returns {Promise<boolean>} Whether the services were loaded
+	 */
+	public async LoadServices(): Promise<boolean> {
 		return undefined;
 	}
 
-	public StartServices(): Promise<boolean> {
-		return undefined
+	/**
+	 * Initialize the Kernel
+	 */
+	private initialize(loader: ConfigLoader): Promise<void> {
+		env.config({ silent: true });
+		
+		loader.on("error", err => {
+
+		});
+
+		loader.on("loaded", () => {
+			this._initialized = true;
+			this.emit("initialized");
+		});
+
+		return loader.load();
 	}
 
 	private loadEnv(): void {
