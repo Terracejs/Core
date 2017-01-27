@@ -30,8 +30,8 @@ export default class Kernel extends EventEmitter {
 		this._services = new Map<string, IService>();
 	}
 
-export default class Kernel {
-	private _services: Array<IService>;
+	public async Start(): Promise<boolean> {
+		await this.Initialize(ConfigLoader.Instance);
 
 	public constructor() {
 		this.loadEnv();
