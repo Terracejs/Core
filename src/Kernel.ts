@@ -24,7 +24,7 @@ export default class Kernel {
 	/**
 	 * Initialize the Kernel
 	 */
-	private initialize(loader: ConfigLoader): Promise<void> {
+	private Initialize(loader: ConfigLoader): Promise<void> {
 		env.config({ silent: true });
 		
 		loader.on("error", err => {
