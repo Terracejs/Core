@@ -17,8 +17,11 @@ export default class Kernel {
 	 * 
 	 * @returns {Promise<boolean>} Whether the services were loaded
 	 */
-	public async LoadServices(): Promise<boolean> {
-		return undefined;
+	private LoadService(reqFun: NodeRequireFunction, details: IServiceDetails): IService {
+		let constructor = reqFun(details.location);
+		// TODO: A little bit more error handling.
+		// TODO: build a or use a DI framework.
+		return new constructor();
 	}
 
 	/**
