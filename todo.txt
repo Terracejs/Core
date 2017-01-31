@@ -1,3 +1,2 @@
-./src/Kernel.ts:114:: A little bit more error handling.
-./src/Kernel.ts:115:: build a or use a DI framework.
+./src/Kernel.ts:124:: build a or use a DI framework.
 ./src/Services/ChildService.ts:31:: Add requesting child processes from kernel

@@ -74,13 +74,78 @@ describe("Kernel tests", function () {
 			assert.equal(true, service instanceof MockService);
 		});
 
-		it("Errors on loading the service class", function () {
-			let kernel =  Kernel.Instance;
+		it("Errors when the loading function errors", function () {
+			let kernel = Kernel.Instance;
 			let reqFun = function (id: string): any {
 				throw new Error("This should be thrown");
 			}
 
-			assert.throws(kernel["LoadService"]);
+			assert.throws(() => {
+				kernel["LoadService"](reqFun, { location: "", name: "test" });
+			},
+				function (err) {
+					if ((err instanceof Error) && /This should be thrown/.test(err.message)) {
+						return true;
+					}
+				});
 		});
+
+		it("Errors when constructor isn't a function", function () {
+			let kernel = Kernel.Instance;
+			let reqFun = function (id: string): any {
+				return {};
+			}
+
+			assert.throws(() => {
+				kernel["LoadService"](reqFun, { name: "test", location: "test" });
+			},
+				function (err) {
+					if ((err instanceof Error) && /Service: test is not a function/.test(err.message)) {
+						return true;
+					}
+				});
+		});
+
+		it("Errors when missing Stop function", function () {
+			let kernel = Kernel.Instance;
+			let reqFun = function (id: string): any {
+				return class Test {
+					Start() { }
+				}
+			};
+
+			assert.throws(() => {
+				kernel["LoadService"](reqFun, { name: "test", location: "test" });
+			},
+				function (err) {
+					if ((err instanceof Error)
+						&& /Service: test must implement the Stop function/.test(err.message)) {
+						return true;
+					}
+				});
+		});
+
+		it("Errors when missing Start function", function () {
+			let kernel = Kernel.Instance;
+			let reqFun = function (id: string): any {
+				return class Test {
+					Stop() { }
+				}
+			};
+
+			assert.throws(() => {
+				kernel["LoadService"](reqFun, { name: "test", location: "test" });
+			},
+				function (err) {
+					if ((err instanceof Error)
+						&& /Service: test must implement the Start function/.test(err.message)) {
+						return true;
+					}
+
+		});
+	});
+
+	describe("LoadServices", function () {
+
 	});
 });
