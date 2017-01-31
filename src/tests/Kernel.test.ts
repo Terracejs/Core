@@ -141,6 +141,7 @@ describe("Kernel tests", function () {
 						&& /Service: test must implement the Start function/.test(err.message)) {
 						return true;
 					}
+			});
 
 		});
 	});
