@@ -1,8 +1,9 @@
 import * as assert from "assert";
-import { Mock, Times } from "typemoq";
+import { Mock, Times, It } from "typemoq";
 import Kernel from "../Kernel";
 import ConfigLoader from "../ConfigLoader";
-import { IService } from "../Services/IService";
+import * as Helpers from "../HelperFunctions";
+import { IService, IServiceDetails } from "../Services/IService";
 
 class MockService implements IService {
 	public async Start(): Promise<boolean> {
@@ -141,12 +142,75 @@ describe("Kernel tests", function () {
 						&& /Service: test must implement the Start function/.test(err.message)) {
 						return true;
 					}
-			});
+				});
 
 		});
 	});
 
 	describe("LoadServices", function () {
+		beforeEach(function () {
+			Kernel.Instance["_services"].clear();
+		});
 
+		it("Errors when servicesList isn't an array", async function () {
+			let config = Mock.ofInstance(ConfigLoader.Instance);
+			let kernel = Kernel.Instance;
+			let error;
+
+			config.setup(x => x.get("kernel.services"))
+				.returns(x => { })
+				.verifiable(Times.once());
+
+			try {
+				await kernel["LoadServices"](config.object);
+			} catch (e) {
+				error = e;
+			}
+
+			assert.equal(error instanceof Error, true);
+			assert.equal(error.message, "Kernel services list must be an array");
+			config.verifyAll();
+		});
+
+		it("Sets location when location is missing", async function () {
+			let config = Mock.ofInstance(ConfigLoader.Instance);
+			let kernel = Mock.ofInstance(Kernel.Instance);
+			let service: IServiceDetails = { name: "Test" };
+			let reqFun = function (id: string): any {
+				return MockService;
+			}
+
+			config.setup(x => x.get("kernel.services"))
+				.returns(x => [service])
+				.verifiable(Times.once());
+
+			kernel.setup(x => x["LoadService"](It.isAny(), It.isAny()))
+			 .returns((x, y): any => { return MockService; });
+			kernel.callBase = true;
+
+			await kernel.object["LoadServices"](config.object);
+
+			assert.notEqual(service.location, undefined)
+			assert.equal(service.location, `${Helpers.app_path()}/services/${service.name}.service.js`);
+
+			config.verifyAll();
+		});
+
+		it("Sets the service in _services map", async function () {
+			let config = Mock.ofInstance(ConfigLoader.Instance);
+			let kernel = Mock.ofInstance(Kernel.Instance);
+
+			config.setup(x => x.get("kernel.services"))
+				.returns(x => [{ name: "Test" }])
+				.verifiable(Times.once());
+
+			kernel.callBase = true;
+			kernel.setup(x => x["LoadService"](It.isAny(), It.isAny()))
+				.returns((x,y): any => { return MockService; });
+			
+			await kernel.object["LoadServices"](config.object);
+			assert.equal(kernel.object["_services"].has("Test"), true);
+			config.verifyAll();
+		});
 	});
 });

@@ -43,6 +43,24 @@ export default class Kernel extends EventEmitter {
 	 * 
 	 * @returns {Promise<boolean>} Whether the services were loaded
 	 */
+	private async LoadServices(loader: ConfigLoader): Promise<any> {
+		let servicesList: IServiceDetails[] = loader.get("kernel.services");
+
+		if(!(servicesList instanceof Array))
+			throw new Error("Kernel services list must be an array");
+		
+		for(let info of servicesList) {
+			if(info.location === undefined) {
+				info.location = `${Helpers.app_path()}/services/${info.name}.service.js`;
+			}
+
+			let service = this.LoadService(require, info);
+			this._services.set(info.name, service);
+		}
+		
+		return servicesList;
+	}
+
 	private LoadService(reqFun: NodeRequireFunction, details: IServiceDetails): IService {
 		let constructor = reqFun(details.location);
 
