@@ -46,13 +46,13 @@ export default class Kernel extends EventEmitter {
 	private LoadService(reqFun: NodeRequireFunction, details: IServiceDetails): IService {
 		let constructor = reqFun(details.location);
 
-		if(typeof constructor !== "function")
+		if (typeof constructor !== "function")
 			throw new Error(`Service: ${details.name} is not a function`);
 
-		if(typeof constructor.prototype.Stop !== "function")
+		if (typeof constructor.prototype.Stop !== "function")
 			throw new Error(`Service: ${details.name} must implement the Stop function`);
 
-		if(typeof constructor.prototype.Start !== "function")
+		if (typeof constructor.prototype.Start !== "function")
 			throw new Error(`Service: ${details.name} must implement the Start function`);
 
 		// TODO: build a or use a DI framework.
