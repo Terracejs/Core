@@ -43,7 +43,7 @@ export default class Kernel extends EventEmitter {
 	 * 
 	 * @returns {Promise<boolean>} Whether the services were loaded
 	 */
-	private async LoadServices(loader: ConfigLoader): Promise<any> {
+	private async LoadServices(loader: ConfigLoader): Promise<boolean> {
 		let servicesList: IServiceDetails[] = loader.get("kernel.services");
 
 		if(!(servicesList instanceof Array))
@@ -58,7 +58,7 @@ export default class Kernel extends EventEmitter {
 			this._services.set(info.name, service);
 		}
 		
-		return servicesList;
+		return true;
 	}
 
 	private LoadService(reqFun: NodeRequireFunction, details: IServiceDetails): IService {
@@ -82,7 +82,7 @@ export default class Kernel extends EventEmitter {
 	 */
 	private Initialize(loader: ConfigLoader): Promise<void> {
 		env.config({ silent: true });
-		
+
 		loader.on("error", err => {
 
 		});
@@ -108,7 +108,7 @@ export default class Kernel extends EventEmitter {
 	public static get Instance(): Kernel {
 		if (this._instance === undefined) {
 			this._instance = new Kernel();
-	}
+		}
 
 		return this._instance;
 	}
