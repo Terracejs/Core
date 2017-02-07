@@ -39,6 +39,21 @@ export default class Kernel extends EventEmitter {
 	}
 
 	/**
+	 * Start a single service
+	 * 
+	 * @param {IService} service The service to start
+	 * @returns {Promise<boolean>} Whether the service started
+	 */
+	private async StartService(service: IService): Promise<boolean> {
+		try {
+			return service.Start();
+		} catch (e) {
+			// TODO: Log out the error
+			return false;
+		}
+	}
+
+	/**
 	 * Load the services into memory
 	 * 
 	 * @returns {Promise<boolean>} Whether the services were loaded
@@ -46,21 +61,30 @@ export default class Kernel extends EventEmitter {
 	private async LoadServices(loader: ConfigLoader): Promise<boolean> {
 		let servicesList: IServiceDetails[] = loader.get("kernel.services");
 
-		if(!(servicesList instanceof Array))
+		if (!(servicesList instanceof Array))
 			throw new Error("Kernel services list must be an array");
-		
-		for(let info of servicesList) {
-			if(info.location === undefined) {
+
+		for (let info of servicesList) {
+			if (info.location === undefined) {
 				info.location = `${Helpers.app_path()}/services/${info.name}.service.js`;
 			}
 
 			let service = this.LoadService(require, info);
 			this._services.set(info.name, service);
 		}
-		
+
 		return true;
 	}
 
+	/**
+	 * Load a single service
+	 * 
+	 * @param {NodeRequireFunction} reqFun The function to require the service
+	 * @param {IServiceDetails} details The service name and file location
+	 * 
+	 * @returns {IService} The service that was loaded
+	 * @throws {Error}
+	 */
 	private LoadService(reqFun: NodeRequireFunction, details: IServiceDetails): IService {
 		let constructor = reqFun(details.location);
 

@@ -185,7 +185,7 @@ describe("Kernel tests", function () {
 				.verifiable(Times.once());
 
 			kernel.setup(x => x["LoadService"](It.isAny(), It.isAny()))
-			 .returns((x, y): any => { return MockService; });
+				.returns((x, y): any => { return MockService; });
 			kernel.callBase = true;
 
 			await kernel.object["LoadServices"](config.object);
@@ -206,11 +206,39 @@ describe("Kernel tests", function () {
 
 			kernel.callBase = true;
 			kernel.setup(x => x["LoadService"](It.isAny(), It.isAny()))
-				.returns((x,y): any => { return MockService; });
-			
+				.returns((x, y): any => { return MockService; });
+
 			await kernel.object["LoadServices"](config.object);
 			assert.equal(kernel.object["_services"].has("Test"), true);
 			config.verifyAll();
+		});
+	});
+
+	describe("StartService", function () {
+		it("Calls start on all services", async function () {
+			let kernel = Kernel.Instance;
+			let service = Mock.ofType(MockService);
+
+			service.setup(x => x.Start()).returns(() => Promise.resolve(true)).verifiable(Times.once());
+
+			let result = await kernel["StartService"](service.object);
+
+			assert.equal(result, true);
+			service.verifyAll();
+		});
+
+		it("Errors on service start error", async function () {
+			let kernel = Kernel.Instance;
+			let service = Mock.ofType(MockService);
+			let err: Error;
+
+			service.setup(x => x.Start()).throws(new Error("This should be the error"))
+				.verifiable(Times.once());
+
+			let result = await kernel["StartService"](service.object);
+
+			assert.equal(result, false);
+			service.verifyAll();
 		});
 	});
 });
