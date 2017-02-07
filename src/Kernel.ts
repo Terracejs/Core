@@ -39,6 +39,29 @@ export default class Kernel extends EventEmitter {
 	}
 
 	/**
+	 * Start all loaded services
+	 * 
+	 * @returns {Promise<boolean>} Whether the services started or not
+	 */
+	private async StartServices(): Promise<boolean> {
+		let failed = false;
+
+		for (let service of this._services.values()) {
+			if (!await service.Start()) {
+				failed = true;
+				break;
+			}
+		}
+
+		if (failed) {
+			// TODO: stop all services
+			return false;
+		}
+
+		return true;
+	}
+
+	/**
 	 * Start a single service
 	 * 
 	 * @param {IService} service The service to start

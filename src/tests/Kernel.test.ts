@@ -1,5 +1,5 @@
 import * as assert from "assert";
-import { Mock, Times, It } from "typemoq";
+import { Mock, Times, It, IMock } from "typemoq";
 import Kernel from "../Kernel";
 import ConfigLoader from "../ConfigLoader";
 import * as Helpers from "../HelperFunctions";
@@ -215,7 +215,7 @@ describe("Kernel tests", function () {
 	});
 
 	describe("StartService", function () {
-		it("Calls start on all services", async function () {
+		it("Calls start on passed service", async function () {
 			let kernel = Kernel.Instance;
 			let service = Mock.ofType(MockService);
 
@@ -240,5 +240,52 @@ describe("Kernel tests", function () {
 			assert.equal(result, false);
 			service.verifyAll();
 		});
+	});
+
+	describe("StartServices", function () {
+		it("Calls start on all loaded services", async function () {
+			let kernel = Kernel.Instance;
+			let services: IMock<MockService>[] = [];
+
+			for (let i of [0, 1, 2, 3, 4]) {
+				services.push(Mock.ofType(MockService));
+				services[i].setup(x => x.Start())
+					.returns(x => Promise.resolve(true))
+					.verifiable(Times.once());
+
+				kernel["_services"].set(`Test${i}`, services[i].object);
+			}
+
+			let result = await kernel["StartServices"]();
+
+			assert.equal(result, true);
+
+			for (let service of services) {
+				service.verifyAll();
+			}
+		});
+
+		it("Returns false if a service doesn't start", async function () {
+			let kernel = Kernel.Instance;
+			let services: IMock<MockService>[] = [];
+
+			for (let i of [0, 1, 2, 3, 4]) {
+				services.push(Mock.ofType(MockService));
+				services[i].setup(x => x.Start())
+					.returns(x => Promise.resolve(false))
+					.verifiable(i === 0 ? Times.once() : Times.never());
+
+				kernel["_services"].set(`Test${i}`, services[i].object);
+			}
+
+			let result = await kernel["StartServices"]();
+
+			assert.equal(result, false);
+			for (let service of services) {
+				service.verifyAll();
+			}
+		});
+
+		it("Calls stop on all services when failing");
 	});
 });
