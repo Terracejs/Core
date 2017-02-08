@@ -3,11 +3,9 @@ stages:
     - test
 
 cache:
-    untracked: true
     key: "$CI_BUILD_REF_NAME"
     paths:
         - node_modules
-
 
 build:6.9:
     image: node:6.9
@@ -20,6 +18,7 @@ test:6.9:
     image: node:6.9
     stage: test
     script:
+        - npm install
         - npm test
 
 build:7.4:
@@ -33,4 +32,5 @@ test:7.4:
     image: node:7.4
     stage: test
     script:
+        - npm install
         - npm test
