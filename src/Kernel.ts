@@ -47,7 +47,7 @@ export default class Kernel extends EventEmitter {
 		let failed = false;
 
 		for (let service of this._services.values()) {
-			if (!await service.Start()) {
+			if (!await this.StartService(service)) {
 				failed = true;
 				break;
 			}
