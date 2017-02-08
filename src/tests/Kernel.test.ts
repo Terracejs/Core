@@ -316,4 +316,49 @@ describe("Kernel tests", function () {
 			service.verifyAll();
 		});
 	});
+
+	describe("StopServices", function () {
+		it("Calls stop on all loaded services", async function () {
+			let kernel = Kernel.Instance;
+			let services: IMock<MockService>[] = [];
+
+			for (let i of [0, 1, 2, 3, 4]) {
+				services.push(Mock.ofType(MockService));
+				services[i].setup(x => x.Stop())
+					.returns(x => Promise.resolve(true))
+					.verifiable(Times.once());
+
+				kernel["_services"].set(`Test${i}`, services[i].object);
+			}
+
+			let result = await kernel["StopServices"]();
+
+			assert.equal(result, true);
+
+			for (let service of services) {
+				service.verifyAll();
+			}
+		});
+
+		it("Returns false if a service doesn't start", async function () {
+			let kernel = Kernel.Instance;
+			let services: IMock<MockService>[] = [];
+
+			for (let i of [0, 1, 2, 3, 4]) {
+				services.push(Mock.ofType(MockService));
+				services[i].setup(x => x.Stop())
+					.returns(x => Promise.resolve(false))
+					.verifiable(i === 0 ? Times.once() : Times.never());
+
+				kernel["_services"].set(`Test${i}`, services[i].object);
+			}
+
+			let result = await kernel["StopServices"]();
+
+			assert.equal(result, false);
+			for (let service of services) {
+				service.verifyAll();
+			}
+		});
+	});
 });

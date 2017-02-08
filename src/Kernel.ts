@@ -76,16 +76,38 @@ export default class Kernel extends EventEmitter {
 		}
 	}
 
+	private async StopServices(): Promise<boolean> {
+		let failed = false;
+
+		for (let service of this._services.values()) {
+			if (!await this.StopService(service)) {
+				failed = true;
+				break;
+			}
+		}
+
+		if (failed) {
+			// TODO: Stop the process except in testing env
+			if (Helpers.env("APP_ENV", "testing") === "testing") {
+				return false;
+			} else {
+				process.exit(0);
+			}
+		}
+
+		return true;
+	}
+
 	/**
 	 * Stop provided service
 	 * 
 	 * @param {IService} service The service to stop
 	 * @returns {Promise<boolean>} Whether the service stopped
 	 */
-	private async StopService(service: IService): Promise<boolean>{
+	private async StopService(service: IService): Promise<boolean> {
 		try {
 			return service.Stop();
-		} catch(e) {
+		} catch (e) {
 			// TODO: Log out the error
 			return false;
 		}

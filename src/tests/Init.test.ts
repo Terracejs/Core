@@ -3,6 +3,8 @@ import { dirname } from "path";
 import * as mock_fs from "mock-fs";
 import * as mocha from "mocha";
 
+process.env.APP_ENV = "testing";
+
 before(function () {
 	mock(dirname(require.main.filename) + "/config/test.config.js", {});
 	mock(dirname(require.main.filename) + "/config/test2.config.js", {});
