@@ -54,7 +54,8 @@ export default class Kernel extends EventEmitter {
 		}
 
 		if (failed) {
-			// TODO: stop all services
+			await this.StopServices();
+
 			return false;
 		}
 
