@@ -3,34 +3,33 @@ stages:
     - test
 
 cache:
-    key: "$CI_BUILD_REF_NAME"
     paths:
         - node_modules
+
+before_script:
+    - apt-get install yarn
+    - yarn install
 
 build:6.9:
     image: node:6.9
     stage: build
     script:
-        - npm install
-        - npm run build
+        - yarn run build
 
 test:6.9:
     image: node:6.9
     stage: test
     script:
-        - npm install
-        - npm test
+        - yarn test
 
 build:7.4:
     image: node:7.4
     stage: build
     script:
-        - npm install
-        - npm run build
+        - yarn run build
 
 test:7.4:
     image: node:7.4
     stage: test
     script:
-        - npm install
-        - npm test
+        - yarn test
