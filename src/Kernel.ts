@@ -77,6 +77,11 @@ export default class Kernel extends EventEmitter {
 		}
 	}
 
+	/**
+	 * Stop all loaded services
+	 * 
+	 * @returns {Promise<boolean>} Whether the services were stopped
+	 */
 	private async StopServices(): Promise<boolean> {
 		let failed = false;
 
@@ -88,7 +93,6 @@ export default class Kernel extends EventEmitter {
 		}
 
 		if (failed) {
-			// TODO: Stop the process except in testing env
 			if (Helpers.env("APP_ENV", "testing") === "testing") {
 				return false;
 			} else {
