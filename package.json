@@ -5,8 +5,7 @@
   "main": "index.js",
   "scripts": {
     "build": "gulp build:development",
-    "test": "gulp run:tests",
-    "postinstall": "typings install"
+    "test": "gulp run:tests"
   },
   "repository": {
     "type": "git",
@@ -24,6 +23,7 @@
   },
   "homepage": "https://github.com/Terracejs/Core#readme",
   "devDependencies": {
+    "@types/dotenv": "^2.0.20",
     "@types/mocha": "^2.2.37",
     "@types/mock-fs": "^3.6.30",
     "@types/node": "^7.0.0",
@@ -39,9 +39,9 @@
     "mocha": "^3.2.0",
     "mock-fs": "^4.0.0-beta.1",
     "mock-require": "^2.0.1",
-    "rewire": "^2.5.2",
     "run-sequence": "^1.2.2",
     "ts-node": "^1.7.2",
+    "typemoq": "^1.1.0",
     "typescript": "^2.0.8"
   },
   "dependencies": {

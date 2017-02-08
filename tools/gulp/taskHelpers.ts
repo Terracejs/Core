@@ -58,10 +58,13 @@ export function tsBuildTask(configPath: string, configName = 'tsconfig.json') {
 
 		let dts = source.dts.pipe(gulp.dest(dest));
 
+		console.log(tsConfig["compilerOptions"]["sourceRoot"]);
 		return merge2([
 			dts,
 			source
-				.pipe(gulpSourcemaps.write('.'))
+				.pipe(gulpSourcemaps.write('.', {
+					sourceRoot: tsConfig['compilerOptions']['sourceRoot']
+				}))
 				.pipe(gulp.dest(dest))
 		]);
 	}

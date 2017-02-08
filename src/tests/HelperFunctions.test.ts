@@ -1,14 +1,12 @@
 import * as assert from "assert";
-import * as fs from "fs";
-import * as filePath from "path";
-import * as mock_fs from "mock-fs";
 import * as mocha from "mocha";
+import { dirname } from "path";
 import { public_path, app_path, env, storage_path, get_files } from "../HelperFunctions";
 
 describe("Helper Function Tests", function () {
 	describe("app_path", function () {
 		it("Should return current path", function () {
-			assert.equal(filePath.dirname(require.main.filename), app_path());
+			assert.equal(dirname(require.main.filename), app_path());
 		});
 	});
 
@@ -38,13 +36,13 @@ describe("Helper Function Tests", function () {
 
 	describe("storage_path", function () {
 		it("Should return app_path + storage", function () {
-			let path = filePath.dirname(require.main.filename) + "/storage";
+			let path = dirname(require.main.filename) + "/storage";
 			assert.equal(path, storage_path());
 		});
 
 		it("Should return app_path + STORAGE_DIR env value", function () {
 			process.env["STORAGE_DIR"] = "/test123";
-			let path = filePath.dirname(require.main.filename) + "/test123";
+			let path = dirname(require.main.filename) + "/test123";
 			assert.equal(path, storage_path());
 			delete process.env["STORAGE_DIR"];
 		});
@@ -52,54 +50,36 @@ describe("Helper Function Tests", function () {
 
 	describe("public_path", function () {
 		it("Should return app_path + public", function () {
-			let path = filePath.dirname(require.main.filename) + "/public";
+			let path = dirname(require.main.filename) + "/public";
 			assert.equal(path, public_path());
 		});
 
 		it("Should return app_path + PUBLIC_DIR env value", function () {
 			process.env["PUBLIC_DIR"] = "/test123";
-			let path = filePath.dirname(require.main.filename) + "/test123";
+			let path = dirname(require.main.filename) + "/test123";
 			assert.equal(path, public_path());
 			delete process.env["PUBLIC_DIR"];
 		});
 	});
 
 	describe("get_files", function () {
-		before(function (done) {
-			mock_fs({
-				'config': {
-					'a-file.txt': 'file content here',
-					'Services': {
-						'another-file.txt': 'some more content'
-					}
-				},
-				'app': {/** another empty directory */ }
-			});
-			done();
-		});
-
-		after(function (done) {
-			mock_fs.restore();
-			done();
-		});
-
 		it("Lists all files in the config dir", async function () {
-			let results = await get_files('./config'),
+			let results = await get_files(`${dirname(require.main.filename)}/config`),
 				length = results.length;
 
-			assert.equal(2, results.length);
+			assert.equal(4, results.length);
 		});
 
 		it("Should throw an error on missing directory", async function () {
 			try {
-				let results = await get_files('./missing');
+				let results = await get_files(`${dirname(require.main.filename)}/missing`);
 			} catch (e) {
 				assert.equal(true, e instanceof Error);
 			}
 		});
 
 		it("Should filter by filename", async function () {
-			let results = await get_files('./config', /a-file\.txt/),
+			let results = await get_files(`${dirname(require.main.filename)}/config`, /a-file\.txt/),
 				length = results.length;
 			assert.equal(1, length);
 		});
