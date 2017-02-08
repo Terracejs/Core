@@ -288,4 +288,32 @@ describe("Kernel tests", function () {
 
 		it("Calls stop on all services when failing");
 	});
+
+	describe("StopService", function () {
+		it("Calls stop on passed service", async function () {
+			let kernel = Kernel.Instance;
+			let service = Mock.ofType(MockService);
+
+			service.setup(x => x.Stop()).returns(() => Promise.resolve(true)).verifiable(Times.once());
+
+			let result = await kernel["StopService"](service.object);
+
+			assert.equal(result, true);
+			service.verifyAll();
+		});
+
+		it("Returns false on service stop error", async function () {
+			let kernel = Kernel.Instance;
+			let service = Mock.ofType(MockService);
+			let err: Error;
+
+			service.setup(x => x.Stop()).throws(new Error("This should be the error"))
+				.verifiable(Times.once());
+
+			let result = await kernel["StopService"](service.object);
+
+			assert.equal(result, false);
+			service.verifyAll();
+		});
+	});
 });

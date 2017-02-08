@@ -77,6 +77,21 @@ export default class Kernel extends EventEmitter {
 	}
 
 	/**
+	 * Stop provided service
+	 * 
+	 * @param {IService} service The service to stop
+	 * @returns {Promise<boolean>} Whether the service stopped
+	 */
+	private async StopService(service: IService): Promise<boolean>{
+		try {
+			return service.Stop();
+		} catch(e) {
+			// TODO: Log out the error
+			return false;
+		}
+	}
+
+	/**
 	 * Load the services into memory
 	 * 
 	 * @returns {Promise<boolean>} Whether the services were loaded
