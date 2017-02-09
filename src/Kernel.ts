@@ -67,40 +67,40 @@ export default class Kernel extends EventEmitter {
 	/**
 	 * Log the data at the info level
 	 * 
-	 * @param {string|object} msg The message to log
+	 * @param {string|Object} msg The message to log
 	 * @param {any} data The data to log;
 	 */
-	public info(msg: string|object, data?:any): void {
+	public info(msg: string|Object, data?:any): void {
 		this.log('info', msg, data);
 	}
 	
 	/**
 	 * Log the data at the warn level
 	 * 
-	 * @param {string|object} msg The message to log
+	 * @param {string|Object} msg The message to log
 	 * @param {any} data The data to log;
 	 */
-	public warn(msg: string|object, data?:any): void {
+	public warn(msg: string|Object, data?:any): void {
 		this.log('info', msg, data);
 	}
 	
 	/**
 	 * Log the data at the error level
 	 * 
-	 * @param {string|object} msg The message to log
+	 * @param {string|Object} msg The message to log
 	 * @param {any} data The data to log;
 	 */
-	public error(msg: string|object, data?:any): void {
+	public error(msg: string|Object, data?:any): void {
 		this.log('info', msg, data);
 	}
 	
 	/**
 	 * Log the data at the specfied level
 	 * 
-	 * @param {string|object} msg The message to log
+	 * @param {string|Object} msg The message to log
 	 * @param {any} data The data to log;
 	 */
-	public log(level: string|number, msg: string|object, data?:any) {
+	public log(level: string|number, msg: string|Object, data?:any) {
 		this._logger.log(level, msg, data);
 	}
 
