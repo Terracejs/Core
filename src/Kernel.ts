@@ -81,7 +81,7 @@ export default class Kernel extends EventEmitter {
 	 * @param {any} data The data to log;
 	 */
 	public warn(msg: string|Object, data?:any): void {
-		this.log('info', msg, data);
+		this.log('warn', msg, data);
 	}
 	
 	/**
@@ -91,7 +91,7 @@ export default class Kernel extends EventEmitter {
 	 * @param {any} data The data to log;
 	 */
 	public error(msg: string|Object, data?:any): void {
-		this.log('info', msg, data);
+		this.log('error', msg, data);
 	}
 	
 	/**

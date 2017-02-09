@@ -274,7 +274,7 @@ describe("Kernel tests", function () {
 				services[i].setup(x => x.Start())
 					.returns(x => Promise.resolve(false))
 					.verifiable(i === 0 ? Times.once() : Times.never());
-				
+
 				services[i].setup(x => x.Stop())
 					.returns(x => Promise.resolve(true))
 					.verifiable(Times.once());
