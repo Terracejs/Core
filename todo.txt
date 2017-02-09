@@ -1,2 +1,5 @@
-./src/Kernel.ts:124:: build a or use a DI framework.
+./src/Kernel.ts:62:: initialize the logger
+./src/Kernel.ts:141:: Log out the error
+./src/Kernel.ts:182:: Log out the error
+./src/Kernel.ts:231:: build a or use a DI framework.
 ./src/Services/ChildService.ts:31:: Add requesting child processes from kernel

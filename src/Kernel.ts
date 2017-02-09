@@ -5,6 +5,7 @@ import { EventEmitter } from "events";
 import { IService, IServiceDetails } from "./Services/IService";
 import * as Helpers from "./HelperFunctions";
 import ConfigLoader from "./ConfigLoader";
+import { ILogger } from "./Logging/ILogger";
 
 /**
  * Class for initializing and managing the various
@@ -16,6 +17,7 @@ import ConfigLoader from "./ConfigLoader";
 export default class Kernel extends EventEmitter {
 	private _services: Map<string, IService>;
 	private _initialized: boolean = false;
+	private _logger: ILogger;
 
 	/**
 	 * Whether the Kernel is initialized
@@ -36,6 +38,70 @@ export default class Kernel extends EventEmitter {
 		if (this._initialized) {
 		}
 		return false;
+	}
+
+	/**
+	 * Initialize the Kernel
+	 * 
+	 * @param {ConfigLoader} loader The configuration object
+	 * 
+	 * @returns {Promise<void>} When the initialization has finished
+	 */
+	public Initialize(loader: ConfigLoader): Promise<void> {
+		env.config({ silent: true });
+
+		loader.on("error", err => {
+
+		});
+
+		loader.on("loaded", () => {
+			this._initialized = true;
+			this.emit("initialized");
+		});
+
+		// TODO: initialize the logger
+
+		return loader.load();
+	}
+
+	/**
+	 * Log the data at the info level
+	 * 
+	 * @param {string|Object} msg The message to log
+	 * @param {any} data The data to log;
+	 */
+	public info(msg: string|Object, data?:any): void {
+		this.log('info', msg, data);
+	}
+	
+	/**
+	 * Log the data at the warn level
+	 * 
+	 * @param {string|Object} msg The message to log
+	 * @param {any} data The data to log;
+	 */
+	public warn(msg: string|Object, data?:any): void {
+		this.log('warn', msg, data);
+	}
+	
+	/**
+	 * Log the data at the error level
+	 * 
+	 * @param {string|Object} msg The message to log
+	 * @param {any} data The data to log;
+	 */
+	public error(msg: string|Object, data?:any): void {
+		this.log('error', msg, data);
+	}
+	
+	/**
+	 * Log the data at the specfied level
+	 * 
+	 * @param {string|Object} msg The message to log
+	 * @param {any} data The data to log;
+	 */
+	public log(level: string|number, msg: string|Object, data?:any) {
+		this._logger.log(level, msg, data);
 	}
 
 	/**
@@ -164,24 +230,6 @@ export default class Kernel extends EventEmitter {
 
 		// TODO: build a or use a DI framework.
 		return new constructor();
-	}
-
-	/**
-	 * Initialize the Kernel
-	 */
-	private Initialize(loader: ConfigLoader): Promise<void> {
-		env.config({ silent: true });
-
-		loader.on("error", err => {
-
-		});
-
-		loader.on("loaded", () => {
-			this._initialized = true;
-			this.emit("initialized");
-		});
-
-		return loader.load();
 	}
 
 	/**
